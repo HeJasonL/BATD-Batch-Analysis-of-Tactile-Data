@@ -68,12 +68,16 @@ library(ppcor)
 library(ggm)
 
 
-
 #setwd ---- 
 setwd("")#set the working directory to the folder containing all the participant's .txt files
+
+#Developer working directories -----------
 #setwd("~/Desktop/Toronto Data/ARBA1")#set the working directory to the folder containing all the participant's .txt files
+setwd("~/Dropbox/Documents/Data repository/Tactile Data/Raw/New Format/CCH")
+site <- "CCH"
+
 participantDirectory <- getwd()
-site <- ""
+#site <- ""
 #site <- "University of Toronto" #insert site name (used to create a column which identifies the site at which the data was collected)
 dir.create("output") #set the wd to the folder where you wish to save the output data to
 setwd(paste0(participantDirectory,"/output")) #automatically creates a folder in that directory named 'output' - if you already have a folder named output, ignore this code. 
@@ -194,6 +198,7 @@ participantTactileData$protocolName[participantTactileData$protocol==800] <- "Ch
 #Static Detection Thresholds with and without adaptation (with ISI 30 and 100)
 participantTactileData$protocolName[participantTactileData$protocol==900 & participantTactileData$stim1amplitude==0] <- "Static Detection Threshold" 
 participantTactileData$protocolName[participantTactileData$protocol==100 & participantTactileData$stim1amplitude==0] <- "Static Detection Threshold" 
+participantTactileData$protocolName[participantTactileData$protocol==910 & participantTactileData$ISI==5000] <- "Static Detection Threshold"
 participantTactileData$protocolName[participantTactileData$protocol==910 & participantTactileData$ISI==30] <- "Static Detection Threshold with Adaptation ISI 30" 
 participantTactileData$protocolName[participantTactileData$protocol==910 & participantTactileData$ISI==100] <- "Static Detection Threshold with Adaptation ISI 100" 
 
@@ -260,8 +265,13 @@ sessions <- which(temp$trialNumber==1) #identify the start of the protocol (tria
 
 list <- list() #create an external list 
 
+
 for (s in 1:length(sessions)){ #for the given the number of attempts or 'sessions'
-triallength <- sessions[2] - sessions[1] #identify the trial length
+if(is.na(sessions[2])){
+  sessions[2] <- 1
+}else{
+  triallength <- sessions[2] - sessions[1] #identify the trial length
+}
 tempo <- temp[sessions[s]:(sessions[s]+triallength),] #here it is just, 
 tempo <- as.data.frame(tempo)[1:triallength,] #convert to dataframe and remove last row (it's ane extra row, unsure why)
 tempo$session <- s #label the session number as 's', which updates every loop 
