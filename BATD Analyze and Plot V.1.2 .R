@@ -3,7 +3,6 @@
 
 #TO DO LIST ------
 #I want to eventually rename sessions to blocks and add in a column for 'Session', which is based on the date (currently block is session)
-#Create a developer mode which has a single folder with designs from every site
 
 #readme ----
 #This code was developed by Jason He, at Johns Hopkins University, Department of Radiology
@@ -82,11 +81,11 @@ library(stringr)
 #setwd & visualisation ---- 
 inputDirectory <- ("") #set the working directory to the folder containing all the participant's .txt files (see examples below)
 visualise <- 1 #set visualise to 1 if you don't want plots - *warning* plots are GPU intensive and can take a lot of time, especially with large datasets
-#inputDirectory <- ("~/Dropbox/Documents/Data repository/Tactile Data/Raw/Test/output") #Test folder with data from various sites
-inputDirectory <- ("~/Dropbox/Documents/Projects/GABARB Tactile/Toronto Data/ARBA1/output") 
+#inputDirectory <- ("~/Dropbox/Documents/Projects/GABARB Tactile/Toronto Data/Test/output") #Used to test changes to code 
+#inputDirectory <- ("~/Dropbox/Documents/Projects/GABARB Tactile/Toronto Data/ARBA1/output") 
 #inputDirectory <- ("~/Dropbox/Documents/Projects/GABARB Tactile/Toronto Data/ARBA2/output") 
 #inputDirectory <- ("~/Dropbox/Documents/Projects/GABARB Tactile/Toronto Data/ARBA3/output") 
-#inputDirectory <- ("~/Dropbox/Documents/Data repository/Tactile Data/Raw/New Format/CCH/output") #Cinccinnati Children's Hopsital (Tourette's Project)
+inputDirectory <- ("~/Dropbox/Documents/Data repository/Tactile Data/Raw/New Format/CCH/output") #Cinccinnati Children's Hopsital (Tourette's Project)
 
 #Analyze & Plot Data (caution: avoid editing) -----------------------
 #setwd ----
@@ -103,6 +102,7 @@ SessionPlots <- list() #Create a list external to the loop for the plots of each
 
 for(p in 1:length(participants)){ #LOOP STARTS HERE, p is participant
 temp <- read.csv(participants[p], header = TRUE)
+temp <- temp[temp$session==1,]
 sessions <- unique(temp$session) #identify the number of sessions completed
 
 #Session control ------
@@ -688,7 +688,7 @@ Data$trialNumber <- 1:nrow(Data) #create a trial number variable
 
 Data$responseTime <- as.numeric(as.character(Data$responseTime)) #turn responseTime to numeric
 Data$correctResponse <- as.numeric(as.character(Data$correctResponse)) #turn correctResponse to numeric
-Data$value <- abs(as.numeric(as.character(Data$value))-100) #turn string variables into numeric
+Data$value <- as.numeric(as.character(Data$value)) #turn string variables into numeric
 
 #Performance analysis ----
 #General variables ----
@@ -697,7 +697,7 @@ accuracy_ADT <- (sum(Data$correctResponse==TRUE, na.rm = TRUE)/(nrow(Data)))*100
 
 #Key variables
 thresholdACC_ADT <- sum(Data$correctResponse[(nrow(Data)-5):(nrow(Data)-1)])
-threshold_ADT <- mean(Data$value[(nrow(Data)-4):(nrow(Data))]) 
+threshold_ADT <- mean(Data$value[(nrow(Data)-4):(nrow(Data))]) - 100 #removing the standard rerference amplitude
 finalAmplitude_ADT <- Data$value[nrow(Data)]
 
 #Reversals
@@ -791,7 +791,7 @@ Data$trialNumber <- 1:nrow(Data) #create a trial number variable
 
 Data$responseTime <- as.numeric(as.character(Data$responseTime)) #turn responseTime to numeric
 Data$correctResponse <- as.numeric(as.character(Data$correctResponse)) #turn correctResponse to numeric
-Data$value <- abs(as.numeric(as.character(Data$value))) - 100 #turn string variables into numeric
+Data$value <- abs(200-as.numeric(as.character(Data$value))) #turn string variables into numeric
 
 #Performance analysis ----
 #General variables ----
@@ -800,7 +800,7 @@ accuracy_sqADT <- (sum(Data$correctResponse==TRUE, na.rm = TRUE)/(nrow(Data)))*1
 
 #Key variables
 thresholdACC_sqADT <- sum(Data$correctResponse[(nrow(Data)-5):(nrow(Data)-1)])
-threshold_sqADT <- mean(Data$value[(nrow(Data)-4):(nrow(Data))]) 
+threshold_sqADT <- mean(Data$value[(nrow(Data)-4):(nrow(Data))]) #removing the standard rerference amplitude
 finalAmplitude_sqADT <- Data$value[nrow(Data)]
 
 #Reversals
@@ -894,7 +894,7 @@ Data$trialNumber <- 1:nrow(Data) #create a trial number variable
 
 Data$responseTime <- as.numeric(as.character(Data$responseTime)) #turn responseTime to numeric
 Data$correctResponse <- as.numeric(as.character(Data$correctResponse)) #turn correctResponse to numeric
-Data$value <- abs(as.numeric(as.character(Data$value)))-100 #turn string variables into numeric
+Data$value <- abs(200-as.numeric(as.character(Data$value))) #turn string variables into numeric
 
 #Performance analysis ----
 #General variables ----
@@ -903,7 +903,7 @@ accuracy_smADT <- (sum(Data$correctResponse==TRUE, na.rm = TRUE)/(nrow(Data)))*1
 
 #Key variables
 thresholdACC_smADT <- sum(Data$correctResponse[(nrow(Data)-5):(nrow(Data)-1)])
-threshold_smADT <- mean(Data$value[(nrow(Data)-4):(nrow(Data))]) 
+threshold_smADT <- mean(Data$value[(nrow(Data)-4):(nrow(Data))]) #removing the standard rerference amplitude
 finalAmplitude_smADT <- Data$value[nrow(Data)]
 
 #Reversals
@@ -998,7 +998,7 @@ Data$trialNumber <- 1:nrow(Data) #create a trial number variable
 
 Data$responseTime <- as.numeric(as.character(Data$responseTime)) #turn responseTime to numeric
 Data$correctResponse <- as.numeric(as.character(Data$correctResponse)) #turn correctResponse to numeric
-Data$value <- as.numeric(as.character(Data$value)) - 100 #turn string variables into numeric
+Data$value <- as.numeric(as.character(Data$value)) #turn string variables into numeric
 
 #Performance analysis ----
 #General variables ----
@@ -1007,7 +1007,7 @@ accuracy_ADTssa <- (sum(Data$correctResponse==TRUE, na.rm = TRUE)/(nrow(Data)))*
 
 #Key variables
 thresholdACC_ADTssa <- sum(Data$correctResponse[(nrow(Data)-5):(nrow(Data)-1)])
-threshold_ADTssa <- mean(Data$value[(nrow(Data)-4):(nrow(Data))]) 
+threshold_ADTssa <- mean(Data$value[(nrow(Data)-4):(nrow(Data))])- 100 #removing the standard rerference amplitude
 finalAmplitude_ADTssa <- Data$value[nrow(Data)]
 
 #Reversals
@@ -1100,7 +1100,7 @@ Data$trialNumber <- 1:nrow(Data) #create a trial number variable
 
 Data$responseTime <- as.numeric(as.character(Data$responseTime)) #turn responseTime to numeric
 Data$correctResponse <- as.numeric(as.character(Data$correctResponse)) #turn correctResponse to numeric
-Data$value <- abs(as.numeric(as.character(Data$value))-100) #turn string variables into numeric
+Data$value <- as.numeric(as.character(Data$value)) #turn string variables into numeric
 
 #Performance analysis ----
 #General variables ----
@@ -1109,7 +1109,7 @@ accuracy_ADTdsa <- (sum(Data$correctResponse==TRUE, na.rm = TRUE)/(nrow(Data)))*
 
 #Key variables
 thresholdACC_ADTdsa <- sum(Data$correctResponse[(nrow(Data)-5):(nrow(Data)-1)])
-threshold_ADTdsa <- mean(Data$value[(nrow(Data)-4):(nrow(Data))]) 
+threshold_ADTdsa <- mean(Data$value[(nrow(Data)-4):(nrow(Data))])- 100 #removing the standard rerference amplitude
 finalAmplitude_ADTdsa <- Data$value[nrow(Data)]
 
 #Reversals
@@ -1365,6 +1365,14 @@ axis.title = element_blank())
 #Plot with text
 plots_SQFD <- ggarrange(plot_SQFD1and2, text_SQFD, ncol = 2, nrow = 1)
 plots_SQFD <- annotate_figure(plots_SQFD, top = text_grob("Simultaneous Frequency Discrimination Threshold", color = "black", face = "bold"))
+plot_SQFD1 <- ggplot(Data, aes(x=trialNumber, y=value, color=as.factor(correctResponse)))+
+geom_point(size =3) +theme(legend.position="none") +
+labs(y = "Frequency (Hz)", x = "Trial Number")
+
+plot_SQFD2 <- ggplot(Data, aes(x=trialNumber, y=responseTime, color=as.factor(correctResponse)))+
+geom_point(size =3) +theme(legend.position="none") +
+labs(y = "Response Time (ms)", x = "Trial Number")
+
 plot_SQFD1and2 <- ggarrange(plot_SQFD1, plot_SQFD2, ncol = 1, nrow = 2)
 
 text = paste("\n   Median RT all across trials:", round(medianRT_SQFD, digits = 2), "\n",
@@ -1452,21 +1460,21 @@ TOJ <- cbind(accuracy_TOJ, medianRT_TOJ, threshold_TOJ, thresholdACC_TOJ, finalD
 
 #Visualisation  ----
 if(visualise==1){#Plot ----
-plot_TOJ1 <- ggplot(Data, aes(x=trialNumber, y=value, color=as.factor(correctResponse)))+
-geom_point(size =3) +theme(legend.position="none") +
-labs(y = "Interstimulus interval (ms)", x = "Trial Number")  +
-theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-panel.background = element_blank(), axis.line = element_line(colour = "black"))+
-scale_color_manual(values = c("royalblue", "red")) + geom_hline(yintercept=threshold_TOJ)
-
-plot_TOJ2 <- ggplot(Data, aes(x=trialNumber, y=responseTime, color=as.factor(correctResponse)))+
-geom_point(size =3) +theme(legend.position="none") +
-labs(y = "Response Time (ms)", x = "Trial Number")+
-theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-panel.background = element_blank(), axis.line = element_line(colour = "black"))+
-scale_color_manual(values = c("royalblue", "red")) + geom_hline(linetype = "dashed", yintercept=medianRT_TOJ)
-
-plot_TOJ1and2 <- ggarrange(plot_TOJ1, plot_TOJ2, ncol = 1, nrow = 2)
+# plot_TOJ1 <- ggplot(Data, aes(x=trialNumber, y=value, color=as.factor(correctResponse)))+
+# geom_point(size =3) +theme(legend.position="none") +
+# labs(y = "Interstimulus interval (ms)", x = "Trial Number")  +
+# theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+# panel.background = element_blank(), axis.line = element_line(colour = "black"))+
+# scale_color_manual(values = c("royalblue", "red")) + geom_hline(yintercept=threshold_TOJ)
+# 
+# plot_TOJ2 <- ggplot(Data, aes(x=trialNumber, y=responseTime, color=as.factor(correctResponse)))+
+# geom_point(size =3) +theme(legend.position="none") +
+# labs(y = "Response Time (ms)", x = "Trial Number")+
+# theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+# panel.background = element_blank(), axis.line = element_line(colour = "black"))+
+# scale_color_manual(values = c("royalblue", "red")) + geom_hline(linetype = "dashed", yintercept=medianRT_TOJ)
+# 
+# plot_TOJ1and2 <- ggarrange(plot_TOJ1, plot_TOJ2, ncol = 1, nrow = 2)
 
 text = paste("\n   Median RT all across trials:", round(medianRT_TOJ, digits = 2), "\n",
 "       ACC across all trials:", 100-round(accuracy_TOJ, digits = 2), "% \n",
@@ -1488,6 +1496,13 @@ axis.title = element_blank())
 #Plot with text
 plots_TOJ <- ggarrange(plot_TOJ1and2, text_TOJ, ncol = 2, nrow = 1)
 plots_TOJ <- annotate_figure(plots_TOJ, top = text_grob("Temporal Order Judgement threshold (ms)", color = "black", face = "bold"))
+plot_TOJ1 <- ggplot(Data, aes(x=trialNumber, y=value, color=as.factor(correctResponse)))+
+geom_point(size =3) +theme(legend.position="none") +
+labs(y = "Interstimulus interval (ms)", x = "Trial Number")
+
+plot_TOJ2 <- ggplot(Data, aes(x=trialNumber, y=responseTime, color=as.factor(correctResponse)))+
+geom_point(size =3) +theme(legend.position="none") +
+labs(y = "Response Time (ms)", x = "Trial Number")
 
 plot_TOJ1and2 <- ggarrange(plot_TOJ1, plot_TOJ2, ncol = 1, nrow = 2)
 
@@ -1746,7 +1761,7 @@ Data$trialNumber <- 1:nrow(Data) #create a trial number variable
 
 Data$responseTime <- as.numeric(as.character(Data$responseTime)) #turn responseTime to numeric
 Data$correctResponse <- as.numeric(as.character(Data$correctResponse)) #turn correctResponse to numeric
-Data$value <- abs(as.numeric(as.character(Data$value)))-100 #turn string variables into numeric
+Data$value <- abs(200-as.numeric(as.character(Data$value))) #turn string variables into numeric
 
 #Performance analysis ----
 #General variables ----
@@ -1844,7 +1859,7 @@ numberofPracticeTrials <- (Data$numberofPracticeTrials)[1]
 Data$trialNumber <- 1:nrow(Data) #create a trial number variable
 Data$responseTime <- as.numeric(as.character(Data$responseTime)) #turn responseTime to numeric
 Data$correctResponse <- as.numeric(as.character(Data$correctResponse)) #turn correctResponse to numeric
-Data$value <- abs(as.numeric(as.character(Data$value)))-100 #turn string variables into numeric
+Data$value <- abs(200-as.numeric(as.character(Data$value))) #turn string variables into numeric
 
 #Performance analysis ----
 #General variables ----
@@ -2179,7 +2194,7 @@ participant_performance[[s]] <- Performance #record performance of a given parti
 if(visualise==1 & temp$site=="University of Toronto"){
   dir.create("Plots", showWarnings = FALSE) #Creates a directory to put the combined .csv file into
   setwd(paste0(baseDirectory,"/Plots")) #Switch to a folder to save the plots
-  pdf(paste(id,"_plots.pdf"), onefile = TRUE, width = 24, height = 18)
+  pdf(paste(id,"_plots.pdf"), onefile = TRUE, width = 24, height = 16)
   print(SessionPlots)
   dev.off()
 }
@@ -2187,7 +2202,7 @@ if(visualise==1 & temp$site=="University of Toronto"){
 if(visualise==1 & temp$site=="CCH"){
   dir.create("Plots", showWarnings = FALSE) #Creates a directory to put the combined .csv file into
   setwd(paste0(baseDirectory,"/Plots")) #Switch to a folder to save the plots
-  pdf(paste(id,"_plots.pdf"), onefile = TRUE, width = 24, height = 18)
+  pdf(paste(id,"_plots.pdf"), onefile = TRUE, width = 24, height = 16)
   print(SessionPlots)
   dev.off()
 }
